@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+		">
+
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+  
+
+     <bean id="phoneDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${phone.driverClassName}"/>
+        <property name="url" value="${phone.url}"/>
+        <property name="username" value="${phone.username}"/>
+        <property name="password" value="${phone.password}"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxWait" value="1000"/>
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="defaultAutoCommit" value="true"/>
+    </bean>
+
+
+  <bean id="oracleDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${oracle.driverClassName}"/>
+        <property name="url" value="${oracle.url}"/>
+        <property name="username" value="${oracle.username}"/>
+        <property name="password" value="${oracle.password}"/>
+        <property name="maxActive" value="100"/>
+        <property name="maxWait" value="1000"/>
+        <property name="poolPreparedStatements" value="true"/>
+        <property name="defaultAutoCommit" value="true"/>
+  </bean>
+
+
+	<bean id="dataSource" class="com.dolton.util.MultipleDataSourceSwitch">  
+	    <property name="targetDataSources">  
+	        <map>  
+	            <entry value-ref="phoneDataSource" key="phoneDataSource"></entry>  
+	            <entry value-ref="oracleDataSource" key="oracleDataSource"></entry>  
+	        </map>  
+	    </property>  
+	    <property name="defaultTargetDataSource" ref="phoneDataSource"></property>   
+	</bean>  
+
+
+	<bean id="SqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:MybatisConf.xml"/>
+		<property name="mapperLocations" value="classpath*:com/dolton/**/*Mapper.xml" />
+	</bean>
+		
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.dolton" />
+		<property name="annotationClass" value="org.springframework.stereotype.Repository"></property>
+	</bean>
+ 
+
+	
+ </beans>

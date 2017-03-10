@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dolton.dao.ExcelImpDao" >
+
+	<select id="selectPhoneList" resultType="phoneVo">
+        SELECT id,phone,static,time,time2,text FROM phone_wcdhxm where static=0 ORDER BY id 
+    </select>
+
+    <insert id="addPhone" parameterType="phoneVo" >
+        insert into phone_wcdhxm(phone,text) values(#{phone,jdbcType=VARCHAR},#{text,jdbcType=VARCHAR})
+    </insert>
+
+	<insert id="insertDX" parameterType="msgVo" >
+       insert into DBAUSER.TC_SMS_OUT_BOX 
+       (SMSID,TARGET_ADDRESS,DESNAME,CONTENT,desuserid,TYPE,savetime,source_name,DEPT_NAME) 
+       values 
+       (DBAUSER.SEQ_TC_SMS_OUT_BOX.NEXTVAL,#{target_address,jdbcType=VARCHAR},
+       #{desname,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{desuserid,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},SYSDATE,#{source_name,jdbcType=VARCHAR},#{dapt_name,jdbcType=VARCHAR})
+    </insert>
+    
+    <update id="updateStatic" parameterType="java.lang.String">
+    	update phone_wcdhxm SET static = 2,time=now() WHERE  phone=#{phone,jdbcType=VARCHAR}
+    </update>
+
+
+	<update id="deleteAll">
+		truncate table phone_wcdhxm
+	</update>
+   
+</mapper>

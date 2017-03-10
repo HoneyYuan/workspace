@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="all">
+    <Properties>
+        <Property name="log-path">D/ExcelLog</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- <PatternLayout pattern="%d{HH:mm:ss} %-5level %logger{36} - %msg%n" /> -->
+            <PatternLayout pattern = "%-5level - %d{HH:mm:ss} %C %M - %m%n" />
+        </Console>
+        <File name="MyLog" fileName="${log-path}/mis.log" append="true">
+            <!-- <PatternLayout pattern="%d{yyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n"/> -->
+            <PatternLayout pattern= "[%p] %d %c %M - %m%n" />
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="all">
+            <AppenderRef ref="MyLog"/>
+            <AppenderRef ref="Console" />
+        </Root>
+    </Loggers>
+</Configuration>
